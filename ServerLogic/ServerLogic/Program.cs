@@ -14,17 +14,17 @@ namespace ServerLogic
         {
             //Connection connect = new Connection("77.55.219.19" , 3456);
             DB dB = new DB("Database.db");
-            Logic Logic = new Logic(dB);
+            Commands commands = new Commands(dB);
             string input = "";
-            while (input != "exit")
+            while (true)
             {
                 //connect.Connect();
                 //input = connect.Recive();
                 input = System.Console.ReadLine();
-                System.Console.WriteLine(Logic.Do(input));
+                if (input == "exit") break;
+                else System.Console.WriteLine(commands.Do(input));
                 System.Console.WriteLine("");
             }
-            System.Console.ReadKey();
         }
     }
 }

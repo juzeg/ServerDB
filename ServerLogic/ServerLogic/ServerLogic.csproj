@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Answers.cs" />
+    <Compile Include="Commands.cs" />
     <Compile Include="Connection.cs" />
     <Compile Include="DB.cs" />
     <Compile Include="Logic.cs" />

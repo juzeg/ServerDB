@@ -111,7 +111,7 @@ namespace Login
 
                     while (reader.FieldCount > i)
                     {
-                        wynik += reader.GetString(i);
+                        wynik += reader[i].ToString();
                         wynik += " ";
                         i++;
                     }
