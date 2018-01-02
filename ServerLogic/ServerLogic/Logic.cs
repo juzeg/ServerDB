@@ -44,6 +44,12 @@ namespace ServerLogic
             Commands.Add("GetColumns");
             //Send list of missions
             Commands.Add("List");
+            //TODO Dodać Check Sume 
+            //TODO SendOne
+            //TODO MemoryCheck
+            //TODO Flagowanie
+            //TODO Baza
+
         }
 
         //Check command then try to do
