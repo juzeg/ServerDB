@@ -57,7 +57,6 @@ namespace ServerLogic
         private bool Exist(string table)
         {
             string sql = "SELECT * FROM TABLES WHERE Table_Name = '" + table_name + "'";
-            Console.WriteLine(dB.Query(sql));
             if (dB.Query(sql) == "") return false;
             else return true;
         }
@@ -130,7 +129,7 @@ namespace ServerLogic
                     //Create record in images table where images from satelite will be stored
                     string sql_img = "INSERT INTO IMGS VALUES ('" + table_name + "', '')";
 
-                    answer = sql + "\n" + sql_img + "\n" + sql_structure;
+                    answer = Answers.Create_Succesful;
 
                     dB.Query(sql);
                     dB.Query(sql_img);
@@ -174,6 +173,7 @@ namespace ServerLogic
                     //Updating last image in table of images
                     string sql_img = "UPDATE IMGS SET IMG = '" + IMG + "' WHERE Mission_Name = '" + table_name + "'";
                     dB.Query(sql_img);
+                    answer = Answers.Succesful;
                     return true;
                 }
                 else
@@ -192,13 +192,12 @@ namespace ServerLogic
         public bool ReciveUpdate(List<string> args)
         {
             GetTime(args);
-            try
+            //try
             {
                 if (Exist(table_name))
                 {
                     string sql = "SELECT * FROM " + table_name + " WHERE time > " + time;
                     answer = dB.Query(sql);
-                    answer += "\n" + sql;
                     return true;
                 }
                 else
@@ -207,10 +206,7 @@ namespace ServerLogic
                     return true;
                 }
             }
-            catch
-            {
-                return false;
-            }
+
         }
 
         //Send lastest image of mission: arguments: table name
@@ -273,7 +269,6 @@ namespace ServerLogic
                     int max_time = Int32.Parse(dB.Query(sql_time));
                     string sql = "SELECT * FROM " + table_name + " WHERE time = " + max_time;
                     answer = dB.Query(sql);
-                    answer += "\n" + sql_time + "\n" + sql;
                     return true;
                 }
                 else

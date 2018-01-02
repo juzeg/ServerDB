@@ -100,8 +100,7 @@ namespace Login
 
         public string Query(string sql)
         {
-            try
-            {
+           
                 string wynik = "";
                 int i = 0;
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
@@ -119,11 +118,7 @@ namespace Login
                     wynik += Environment.NewLine;
                 }
                 return wynik;
-            }
-            catch
-            {
-                return "something went wrong";
-            }
+            
         }
 
         public int getsize()

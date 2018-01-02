@@ -12,18 +12,22 @@ namespace ServerLogic
     {
         static void Main(string[] args)
         {
-            //Connection connect = new Connection("77.55.219.19" , 3456);
+            
             DB dB = new DB("Database.db");
             Commands commands = new Commands(dB);
             string input = "";
+            string IP;
+            IP = Console.ReadLine();
+            Connection connect = new Connection(IP, 3456);
             while (true)
             {
-                //connect.Connect();
-                //input = connect.Recive();
-                input = System.Console.ReadLine();
-                if (input == "exit") break;
-                else System.Console.WriteLine(commands.Do(input));
-                System.Console.WriteLine("");
+                
+                connect.Connect();
+                input = connect.Recive();
+                //input = System.Console.ReadLine();
+                //if (input == "exit") break;
+                System.Console.WriteLine(commands.Do(input));
+                connect.Respond(commands.Do(input));
             }
         }
     }
