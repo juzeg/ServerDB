@@ -14,5 +14,10 @@ namespace Server_Test
 
 
         }
+        [TestMethod]
+        public void testmetod2()
+        {
+            Assert.IsFalse(!true);
+        }
     }
 }
