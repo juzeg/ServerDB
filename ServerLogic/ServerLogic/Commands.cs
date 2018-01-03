@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerLogic
+namespace Server
 {
-    class Commands
+   public  class Server_Commands
     {
         Logic logic = null;
-        public Commands(DB dB)
+        public  Server_Commands(DB dB)
         {
             logic = new Logic(dB);
         }

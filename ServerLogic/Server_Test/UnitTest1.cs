@@ -1,14 +1,18 @@
 ﻿using System;
+using Server;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Server_Test
+    
 {
     [TestClass]
-    public class UnitTest1
+    public class CommandsTests
     {
         [TestMethod]
         public void TestMethod1()
         {
+            var command = new(new DB);
+
+
         }
     }
 }

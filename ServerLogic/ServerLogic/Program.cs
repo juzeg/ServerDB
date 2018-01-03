@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerLogic
+namespace Server
 {
     class Program
     {
@@ -14,7 +14,7 @@ namespace ServerLogic
         {
             
             DB dB = new DB("Database.db");
-            Commands commands = new Commands(dB);
+            Server_Commands commands = new Server_Commands(dB);
             string input = "";
             string IP;
             IP = Console.ReadLine();
