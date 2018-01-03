@@ -8,7 +8,7 @@ using System.Data.SQLite;
 
 namespace Login
 {
-    class DB
+    public class DB
     {
         public SQLiteConnection m_dbConnection;
         public DB(string source)

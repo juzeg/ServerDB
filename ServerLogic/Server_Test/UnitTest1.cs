@@ -10,7 +10,7 @@ namespace Server_Test
         [TestMethod]
         public void TestMethod1()
         {
-            var command = new(new DB);
+            Assert.IsFalse(false);
 
 
         }

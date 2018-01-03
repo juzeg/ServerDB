@@ -21,7 +21,9 @@ namespace Server
             Connection connect = new Connection(IP, 3456);
             while (true)
             {
-                
+
+
+
                 connect.Connect();
                 input = connect.Recive();
                 //input = System.Console.ReadLine();
