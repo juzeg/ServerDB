@@ -1,20 +1,37 @@
-﻿using System;
+﻿
+using System;
 using Login;
 using Serwer2;
 
 namespace Server
 {
     internal class Program
+
     {
+        private static object db;
+
+        public Connection connection { get; set; }
+
+
         private static void Main(string[] args)
         {
-            var dB = new DB("Database.db");
+            Initialise();
+
+
+            while (true) Core_functionality();
+        }
+
+        private static void Initialise()
+        {
+            
+           
+            db = new DB.("DataBase");
+
             var commands = new Server_Commands(dB);
             var input = "";
             string IP;
 
             var connection = new SetUpconnection();
-/*
             try
             {
                 if (IP == "d")
@@ -28,17 +45,16 @@ namespace Server
                 Console.WriteLine("error parsing ipS adress");
                 throw;
             }
+        }
 
-    */
-            while (true)
-            {
-                connect.Connect();
-                input = connect.Recive();
-                //input = System.Console.ReadLine();
-                //if (input == "exit") break;
-                Console.WriteLine(commands.Do(input));
-                connect.Respond(commands.Do(input));
-            }
+        private static void Core_functionality()
+        {
+            connect.Connect();
+            input = connect.Recive();
+            //input = System.Console.ReadLine();
+            //if (input == "exit") break;
+            Console.WriteLine(commands.Do(input));
+            connect.Respond(commands.Do(input));
         }
     }
 }

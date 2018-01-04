@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Login
 {
-    public class DB
+    public class DataBase
     {
         public SQLiteConnection m_dbConnection;
 
-        public DB(string source)
+        public DataBase(string source)
         {
             try
             {

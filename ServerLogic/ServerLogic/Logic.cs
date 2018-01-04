@@ -13,14 +13,14 @@ namespace Server
         private Answers Answers;
         private List<string> arguments;
         private string column_name;
-        private readonly DB dB;
+        private readonly DataBase dB;
         private string IMG;
 
         //global variables using in method Devide(), GetTime() or GetIMG()
         private string table_name = "";
         private uint time;
 
-        public Logic(DB tmp)
+        public Logic(DataBase tmp)
         {
             dB = tmp;
             //Create new table, arguments: table name and array of names of columns
