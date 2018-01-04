@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Login;
 using ServerLogic;
 using Serwer2;
@@ -35,10 +36,7 @@ namespace Server
         {
             try
             {
-                if (IP == "d")
-                    return new Connection("127.0.0.1", 3456);
-                return new Connection(IP, 3456);
-               
+                return IP == "d" ? new Connection("127.0.0.1", 3456) : new Connection(IP, 3456);
             }
             catch (Exception e)
             {

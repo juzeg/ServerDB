@@ -13,14 +13,27 @@ namespace Serwer2
 
         public string IP;
         // Constructor
-        public Connection(string ip, int port)
+        public Connection( int port)
         {
-            var ipAd = IPAddress.Parse(ip);
-            IP = ip;
+            
+            var ipAd = IPAddress.Parse(GetLocalIPAddress());
+           
             /* Initializes the Listener */
             myList = new TcpListener(ipAd, port);
             /* Start Listeneting at the specified port */
             myList.Start();
+        }
+        public static string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            throw new Exception("No network adapters with an IPv4 address in the system!");
         }
 
 

@@ -20,19 +20,13 @@ namespace Server.Tests
 
         }
         [TestMethod()]
-        public void ConnectionSetupTest_GivenIP_IP()
+        public void ConnectionSetupTest_GivenIP_Null()
         {
-            var connection = Program.ConnectionSetup("1.1.1.1");
-            Assert.IsTrue(connection.IP == "1.1.1.1");
+            var connection = Program.ConnectionSetup(Connection.GetLocalIPAddress());
+            Assert.IsTrue(null != connection);
 
         }
-        [TestMethod()]
-        public void ConnectionSetupTest_GivenIP2_GivenIP2()
-        {
-            var connection = Program.ConnectionSetup("23.2.3.3");
-            Assert.IsTrue(connection.IP == "23.2.3.3");
-
-        }
+       
         [TestMethod()]
         public void ConnectionSetupTest_RandomValue_Null()
         {
