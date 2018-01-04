@@ -1,6 +1,6 @@
-﻿
-using System;
+﻿using System;
 using Login;
+using ServerLogic;
 using Serwer2;
 
 namespace Server
@@ -10,7 +10,7 @@ namespace Server
     {
         private static object db;
 
-        public Connection connection { get; set; }
+        public static Connection connect { get; set; }
 
 
         private static void Main(string[] args)
@@ -18,22 +18,17 @@ namespace Server
             Initialise();
 
 
-            while (true) Core_functionality();
+            while (Core_functionality()) ;
         }
 
         private static void Initialise()
         {
-            
-           
-            db = new DB.("DataBase");
+            db = new DataBase("DataBase");
 
-            var commands = new Server_Commands(dB);
-            var input = "";
-            string IP;
 
-            var connection = new SetUpconnection();
             try
             {
+                string IP = "dupa";
                 if (IP == "d")
                     connect = new Connection("127.0.0.1", 3456);
                 else
@@ -47,14 +42,17 @@ namespace Server
             }
         }
 
-        private static void Core_functionality()
+        private static bool Core_functionality()
         {
             connect.Connect();
-            input = connect.Recive();
-            //input = System.Console.ReadLine();
-            //if (input == "exit") break;
-            Console.WriteLine(commands.Do(input));
-            connect.Respond(commands.Do(input));
+            var input = connect.Recive();
+            input = Console.ReadLine();
+
+            Console.WriteLine(Commands.Do(input));
+            connect.Respond(Commands.Do(input));
+
+            if (input == "exit") return false;
+            return true;
         }
     }
 }
