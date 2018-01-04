@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using Login;
 using Serwer2;
 
@@ -7,18 +6,30 @@ namespace Server
 {
     internal class Program
     {
-       
         private static void Main(string[] args)
         {
-
-
-           
             var dB = new DB("Database.db");
             var commands = new Server_Commands(dB);
             var input = "";
             string IP;
-            IP = Console.ReadLine();
-            var connect = new Connection(IP, 3456);
+
+            var connection = new SetUpconnection();
+/*
+            try
+            {
+                if (IP == "d")
+                    connect = new Connection("127.0.0.1", 3456);
+                else
+                    connect = new Connection(IP, 3456);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine("error parsing ipS adress");
+                throw;
+            }
+
+    */
             while (true)
             {
                 connect.Connect();
