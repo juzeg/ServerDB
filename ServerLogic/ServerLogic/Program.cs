@@ -25,25 +25,10 @@ namespace Server
         private static void Initialise()
         {
             db = new DataBase("DataBase");
-            while (null == Connect)
-            {
-                Console.WriteLine("Please insert IP or type d for default localhost");
-                Connect = ConnectionSetup(Console.ReadLine());
-            }
+             Connect = new Connection(3456);
         }
 
-        public static Connection ConnectionSetup(string IP)
-        {
-            try
-            {
-                return IP == "d" ? new Connection("127.0.0.1", 3456) : new Connection(IP, 3456);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("inserted value was not correct");
-                return null;
-            }
-        }
+      
 
         private static bool Core_functionality()
         {

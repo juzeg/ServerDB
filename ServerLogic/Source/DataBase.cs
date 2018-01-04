@@ -1,27 +1,25 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Data.SQLite;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Login
+#endregion
+
+namespace ServerLogic.Source
 {
     public class DataBase
     {
-        public SQLiteConnection m_dbConnection;
+        private readonly SQLiteConnection _mDbConnection;
 
         public DataBase(string source)
         {
-            try
-            {
-                m_dbConnection = new SQLiteConnection("Data Source=" + source + ";Version=3;");
-                m_dbConnection.Open();
-            }
-            catch
-            {
-            }
+            _mDbConnection = new SQLiteConnection("Data Source=" + source + ";Version=3;");
+            _mDbConnection.Open();
         }
 
-        public string Compute(string txt)
+        private string Compute(string txt)
         {
             using (var md5Hash = MD5.Create())
             {
@@ -81,8 +79,8 @@ namespace Login
             login = login.ToUpper();
             login = Compute(login);
             var sql = "select ID from accounts_list where login = '" + login + "'";
-            var get_id = new SQLiteCommand(sql, m_dbConnection);
-            var id = get_id.ExecuteReader();
+            var getId = new SQLiteCommand(sql, _mDbConnection);
+            var id = getId.ExecuteReader();
             id.Read();
             ID = id.GetInt32(0);
             return ID;
@@ -92,7 +90,7 @@ namespace Login
         {
             var wynik = "";
             var i = 0;
-            var command = new SQLiteCommand(sql, m_dbConnection);
+            var command = new SQLiteCommand(sql, _mDbConnection);
             var reader = command.ExecuteReader();
             while (reader.Read())
             {
@@ -110,10 +108,10 @@ namespace Login
             return wynik;
         }
 
-        public int getsize()
+        public int Getsize()
         {
             var i = 0;
-            var command = new SQLiteCommand("get * from structure", m_dbConnection);
+            var command = new SQLiteCommand("get * from structure", _mDbConnection);
             var reader = command.ExecuteReader();
             while (reader.Read()) i++;
             return i;
@@ -122,7 +120,7 @@ namespace Login
         public int CountResults(string sql)
         {
             var i = 0;
-            var command = new SQLiteCommand(sql, m_dbConnection);
+            var command = new SQLiteCommand(sql, _mDbConnection);
             var reader = command.ExecuteReader();
             while (reader.Read()) i++;
             return i;
