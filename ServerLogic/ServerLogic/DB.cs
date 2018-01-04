@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Security.Cryptography;
 using System.Data.SQLite;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Login
 {
     public class DB
     {
         public SQLiteConnection m_dbConnection;
+
         public DB(string source)
         {
             try
@@ -20,68 +18,60 @@ namespace Login
             }
             catch
             {
-
             }
         }
+
         public string Compute(string txt)
         {
-                using (MD5 md5Hash = MD5.Create())
-                {
-                    return GetMd5Hash(md5Hash, txt);
-                }
+            using (var md5Hash = MD5.Create())
+            {
+                return GetMd5Hash(md5Hash, txt);
             }
+        }
 
         private string GetMd5Hash(MD5 md5Hash, string input)
         {
-            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
-            StringBuilder sBuilder = new StringBuilder();
-            for (int i = 0; i < data.Length; i++)
-            {
-                sBuilder.Append(data[i].ToString("x2"));
-            }
+            var data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+            var sBuilder = new StringBuilder();
+            for (var i = 0; i < data.Length; i++) sBuilder.Append(data[i].ToString("x2"));
             return sBuilder.ToString();
         }
+
         private bool VerifyMd5Hash(string input, string hash)
         {
-            string hashOfInput = Compute(input);
+            var hashOfInput = Compute(input);
             Console.WriteLine("z veryfiy hash");
             Console.WriteLine(hashOfInput);
             Console.WriteLine(hash);
-            StringComparer comparer = StringComparer.OrdinalIgnoreCase;
+            var comparer = StringComparer.OrdinalIgnoreCase;
             if (0 == comparer.Compare(hashOfInput, hash))
-            {
                 return true;
-            }
-            else
-            {
-                return false;
-            }
+            return false;
         }
+
         public bool VerifyPassword(string login, string password)
         {
             password = Compute(password);
             login = login.ToUpper();
             login = Compute(login);
-            string d = Query("Select ID from accounts_list where login = '" + login + "' and password = '" + password + "'");
+            var d = Query(
+                "Select ID from accounts_list where login = '" + login + "' and password = '" + password + "'");
             Console.WriteLine(d);
             if (d != "")
-            {
                 return true;
-            }
-            else
-            {
-                return false;
-            }
+            return false;
         }
+
         public void CreateNewUser(string login, string password)
         {
-            using (MD5 md5Hash = MD5.Create())
+            using (var md5Hash = MD5.Create())
             {
                 login = login.ToUpper();
                 password = Compute(password);
                 login = Compute(login);
             }
-            string sql = "insert into accounts_list (login,password) values ('" + login + "', '" + password + "')";
+
+            var sql = "insert into accounts_list (login,password) values ('" + login + "', '" + password + "')";
             Query("insert into accounts_list (login,password) values ('" + login + "', '" + password + "')");
         }
 
@@ -90,9 +80,9 @@ namespace Login
             int ID;
             login = login.ToUpper();
             login = Compute(login);
-            string sql = "select ID from accounts_list where login = '" + login + "'";
-            SQLiteCommand get_id = new SQLiteCommand(sql, m_dbConnection);
-            SQLiteDataReader id = get_id.ExecuteReader();
+            var sql = "select ID from accounts_list where login = '" + login + "'";
+            var get_id = new SQLiteCommand(sql, m_dbConnection);
+            var id = get_id.ExecuteReader();
             id.Read();
             ID = id.GetInt32(0);
             return ID;
@@ -100,53 +90,42 @@ namespace Login
 
         public string Query(string sql)
         {
-           
-                string wynik = "";
-                int i = 0;
-                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-                SQLiteDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+            var wynik = "";
+            var i = 0;
+            var command = new SQLiteCommand(sql, m_dbConnection);
+            var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                while (reader.FieldCount > i)
                 {
-
-                    while (reader.FieldCount > i)
-                    {
-                        wynik += reader[i].ToString();
-                        wynik += " ";
-                        i++;
-                    }
-                    i = 0;
-                    wynik += Environment.NewLine;
+                    wynik += reader[i].ToString();
+                    wynik += " ";
+                    i++;
                 }
-                return wynik;
-            
+
+                i = 0;
+                wynik += Environment.NewLine;
+            }
+
+            return wynik;
         }
 
         public int getsize()
         {
-            int i = 0;
-            SQLiteCommand command = new SQLiteCommand("get * from structure", m_dbConnection);
-            SQLiteDataReader reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                i++;
-            }
+            var i = 0;
+            var command = new SQLiteCommand("get * from structure", m_dbConnection);
+            var reader = command.ExecuteReader();
+            while (reader.Read()) i++;
             return i;
         }
 
         public int CountResults(string sql)
         {
-                int i = 0;
-                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-                SQLiteDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    i++;
-                }
-                return i;
+            var i = 0;
+            var command = new SQLiteCommand(sql, m_dbConnection);
+            var reader = command.ExecuteReader();
+            while (reader.Read()) i++;
+            return i;
         }
-
     }
-
-
 }
-

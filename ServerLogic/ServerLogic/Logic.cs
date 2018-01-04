@@ -1,27 +1,24 @@
-﻿using Login;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Login;
 
 namespace Server
 {
-    class Logic
+    internal class Logic
     {
-        Answers Answers;
-        DB dB = null;
         public static List<string> Commands = new List<string>();
 
         //global variable using to send answer to client
         public string answer = "";
+        private Answers Answers;
+        private List<string> arguments;
+        private string column_name;
+        private readonly DB dB;
+        private string IMG;
 
         //global variables using in method Devide(), GetTime() or GetIMG()
         private string table_name = "";
-        private List<string> arguments = null;
         private uint time;
-        private string IMG;
-        private string column_name;
 
         public Logic(DB tmp)
         {
@@ -49,7 +46,6 @@ namespace Server
             //TODO MemoryCheck
             //TODO Flagowanie
             //TODO Baza
-
         }
 
         //Check command then try to do
@@ -57,14 +53,14 @@ namespace Server
         public string ToAnswer(string ans)
         {
             answer = "";
-            return ans;      
+            return ans;
         }
 
         private bool Exist(string table)
         {
-            string sql = "SELECT * FROM TABLES WHERE Table_Name = '" + table_name + "'";
+            var sql = "SELECT * FROM TABLES WHERE Table_Name = '" + table_name + "'";
             if (dB.Query(sql) == "") return false;
-            else return true;
+            return true;
         }
 
         //Cut table name off rest of arguments
@@ -73,11 +69,11 @@ namespace Server
             table_name = "";
             arguments = new List<string>();
 
-            for (int i = 0; i < args.Count; i++)
-            {
-                if (i == 0) table_name = args[i];
-                else arguments.Add(args[i]);
-            }
+            for (var i = 0; i < args.Count; i++)
+                if (i == 0)
+                    table_name = args[i];
+                else
+                    arguments.Add(args[i]);
         }
 
         //Cut table name off image (in string)
@@ -86,12 +82,13 @@ namespace Server
             table_name = "";
             arguments = new List<string>();
 
-            for (int i = 0; i < args.Count; i++)
-            {
-                if (i == 0) table_name = args[i];
-                else if (i + 1 == args.Count) IMG = args[i];
-                else arguments.Add(args[i]);
-            }
+            for (var i = 0; i < args.Count; i++)
+                if (i == 0)
+                    table_name = args[i];
+                else if (i + 1 == args.Count)
+                    IMG = args[i];
+                else
+                    arguments.Add(args[i]);
         }
 
         //Cut table name off column name (using in GetOne)
@@ -106,7 +103,7 @@ namespace Server
         {
             int time_0;
             table_name = args[0];
-            Int32.TryParse(args[1], out time_0);
+            int.TryParse(args[1], out time_0);
             time = Convert.ToUInt32(time_0);
         }
 
@@ -118,22 +115,23 @@ namespace Server
             {
                 if (!Exist(table_name))
                 {
-                    string structure = "";
-                    string sql = "CREATE TABLE " + table_name + " (time int";
-                    for (int i = 0; i < arguments.Count; i++)
+                    var structure = "";
+                    var sql = "CREATE TABLE " + table_name + " (time int";
+                    for (var i = 0; i < arguments.Count; i++)
                     {
                         if (i + 1 == arguments.Count) structure += arguments[i];
                         else structure += arguments[i] + " ";
                         sql += ", " + arguments[i] + " real";
                     }
+
                     sql += ")";
 
                     //Create record in table of structures of tables
-                    string sql_structure = "INSERT INTO TABLES VALUES ('" + table_name + "', '" + structure + "')";
+                    var sql_structure = "INSERT INTO TABLES VALUES ('" + table_name + "', '" + structure + "')";
                     dB.Query(sql_structure);
 
                     //Create record in images table where images from satelite will be stored
-                    string sql_img = "INSERT INTO IMGS VALUES ('" + table_name + "', '')";
+                    var sql_img = "INSERT INTO IMGS VALUES ('" + table_name + "', '')";
 
                     answer = Answers.Create_Succesful;
 
@@ -141,11 +139,9 @@ namespace Server
                     dB.Query(sql_img);
                     return true;
                 }
-                else
-                {
-                    answer = Answers.Exist;
-                    return true;
-                }
+
+                answer = Answers.Exist;
+                return true;
             }
             catch
             {
@@ -163,30 +159,26 @@ namespace Server
                 if (Exist(table_name))
                 {
                     int time_0;
-                    if (!Int32.TryParse(arguments[0].ToString(), out time_0))
-                    {
-                        return false;
-                    }
-                    string sql = "INSERT INTO " + table_name + " VALUES (";
-                    for (int i = 0; i < arguments.Count; i++)
+                    if (!int.TryParse(arguments[0], out time_0)) return false;
+                    var sql = "INSERT INTO " + table_name + " VALUES (";
+                    for (var i = 0; i < arguments.Count; i++)
                     {
                         sql += arguments[i];
                         if (i + 1 != arguments.Count) sql += ", ";
                     }
+
                     sql += ")";
                     dB.Query(sql);
 
                     //Updating last image in table of images
-                    string sql_img = "UPDATE IMGS SET IMG = '" + IMG + "' WHERE Mission_Name = '" + table_name + "'";
+                    var sql_img = "UPDATE IMGS SET IMG = '" + IMG + "' WHERE Mission_Name = '" + table_name + "'";
                     dB.Query(sql_img);
                     answer = Answers.Succesful;
                     return true;
                 }
-                else
-                {
-                    answer = Answers.NotExist;
-                    return true;
-                }
+
+                answer = Answers.NotExist;
+                return true;
             }
             catch
             {
@@ -202,17 +194,14 @@ namespace Server
             {
                 if (Exist(table_name))
                 {
-                    string sql = "SELECT * FROM " + table_name + " WHERE time > " + time;
+                    var sql = "SELECT * FROM " + table_name + " WHERE time > " + time;
                     answer = dB.Query(sql);
                     return true;
                 }
-                else
-                {
-                    answer = Answers.NotExist;
-                    return true;
-                }
-            }
 
+                answer = Answers.NotExist;
+                return true;
+            }
         }
 
         //Send lastest image of mission: arguments: table name
@@ -222,15 +211,13 @@ namespace Server
             {
                 if (Exist(table_name))
                 {
-                    string sql = "SELECT IMG FROM IMGS WHERE Mission_Name = '" + table_name + "'";
+                    var sql = "SELECT IMG FROM IMGS WHERE Mission_Name = '" + table_name + "'";
                     answer = dB.Query(sql);
                     return true;
                 }
-                else
-                {
-                    answer = Answers.NotExist;
-                    return true;
-                }
+
+                answer = Answers.NotExist;
+                return true;
             }
             catch
             {
@@ -246,16 +233,14 @@ namespace Server
             {
                 if (Exist(table_name))
                 {
-                    string sql = "SELECT * FROM " + table_name + " WHERE time > " + time;
+                    var sql = "SELECT * FROM " + table_name + " WHERE time > " + time;
                     if (dB.Query(sql) == "") answer = "Your data is actual";
                     else answer = "Your data is not actual";
                     return true;
                 }
-                else
-                {
-                    answer = Answers.NotExist;
-                    return true;
-                }
+
+                answer = Answers.NotExist;
+                return true;
             }
             catch
             {
@@ -271,17 +256,15 @@ namespace Server
             {
                 if (Exist(table_name))
                 {
-                    string sql_time = "SELECT MAX(time) FROM " + table_name;
-                    int max_time = Int32.Parse(dB.Query(sql_time));
-                    string sql = "SELECT * FROM " + table_name + " WHERE time = " + max_time;
+                    var sql_time = "SELECT MAX(time) FROM " + table_name;
+                    var max_time = int.Parse(dB.Query(sql_time));
+                    var sql = "SELECT * FROM " + table_name + " WHERE time = " + max_time;
                     answer = dB.Query(sql);
                     return true;
                 }
-                else
-                {
-                    answer = Answers.NotExist;
-                    return true;
-                }
+
+                answer = Answers.NotExist;
+                return true;
             }
             catch
             {
@@ -297,15 +280,13 @@ namespace Server
             {
                 if (Exist(table_name))
                 {
-                    string sql = "SELECT " + column_name + " FROM " + table_name;
+                    var sql = "SELECT " + column_name + " FROM " + table_name;
                     answer = dB.Query(sql);
                     return true;
                 }
-                else
-                {
-                    answer = Answers.NotExist;
-                    return true;
-                }
+
+                answer = Answers.NotExist;
+                return true;
             }
             catch
             {
@@ -321,20 +302,15 @@ namespace Server
             {
                 if (Exist(table_name))
                 {
-                    string sql = "SELECT Columns FROM TABLES WHERE Table_Name = '" + table_name + "'";
-                    string structure = dB.Query(sql);
-                    string[] columns = structure.Split(' ');
-                    for (int i = 0; i < columns.Length; i++)
-                    {
-                        answer += columns[i] + "\n";
-                    }
+                    var sql = "SELECT Columns FROM TABLES WHERE Table_Name = '" + table_name + "'";
+                    var structure = dB.Query(sql);
+                    var columns = structure.Split(' ');
+                    for (var i = 0; i < columns.Length; i++) answer += columns[i] + "\n";
                     return true;
                 }
-                else
-                {
-                    answer = Answers.NotExist;
-                    return true;
-                }
+
+                answer = Answers.NotExist;
+                return true;
             }
             catch
             {
@@ -347,7 +323,7 @@ namespace Server
         {
             try
             {
-                string sql = "SELECT Table_Name FROM TABLES";
+                var sql = "SELECT Table_Name FROM TABLES";
                 answer = dB.Query(sql);
                 return true;
             }
