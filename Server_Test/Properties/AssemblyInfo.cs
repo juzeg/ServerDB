@@ -1,6 +1,9 @@
+#region
+
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+
+#endregion
 
 [assembly: AssemblyTitle("Server_Test")]
 [assembly: AssemblyDescription("")]
