@@ -5,16 +5,18 @@ using System.Text;
 
 namespace Serwer2
 {
-    internal class Connection
+    public class Connection
     {
         private readonly TcpListener myList;
 
         public Socket s;
 
+        public string IP;
         // Constructor
         public Connection(string ip, int port)
         {
             var ipAd = IPAddress.Parse(ip);
+            IP = ip;
             /* Initializes the Listener */
             myList = new TcpListener(ipAd, port);
             /* Start Listeneting at the specified port */

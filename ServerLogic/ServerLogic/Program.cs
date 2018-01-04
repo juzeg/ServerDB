@@ -5,12 +5,12 @@ using Serwer2;
 
 namespace Server
 {
-    internal class Program
+    public class Program
 
     {
         private static object db;
 
-        public static Connection connect { get; set; }
+        public static Connection Connect { get; set; }
 
 
         private static void Main(string[] args)
@@ -24,32 +24,37 @@ namespace Server
         private static void Initialise()
         {
             db = new DataBase("DataBase");
+            while (null == Connect)
+            {
+                Console.WriteLine("Please insert IP or type d for default localhost");
+                Connect = ConnectionSetup(Console.ReadLine());
+            }
+        }
 
-
+        public static Connection ConnectionSetup(string IP)
+        {
             try
             {
-                string IP = "dupa";
                 if (IP == "d")
-                    connect = new Connection("127.0.0.1", 3456);
-                else
-                    connect = new Connection(IP, 3456);
+                    return new Connection("127.0.0.1", 3456);
+                return new Connection(IP, 3456);
+               
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                Console.WriteLine("error parsing ipS adress");
-                throw;
+                Console.WriteLine("inserted value was not correct");
+                return null;
             }
         }
 
         private static bool Core_functionality()
         {
-            connect.Connect();
-            var input = connect.Recive();
+            Connect.Connect();
+            var input = Connect.Recive();
             input = Console.ReadLine();
 
             Console.WriteLine(Commands.Do(input));
-            connect.Respond(Commands.Do(input));
+            Connect.Respond(Commands.Do(input));
 
             if (input == "exit") return false;
             return true;
